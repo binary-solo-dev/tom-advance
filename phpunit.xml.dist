@@ -1,61 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
-         backupGlobals="false"
-         colors="true"
-         bootstrap="tests/bootstrap.php"
-         convertDeprecationsToExceptions="false"
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+        bootstrap="vendor/autoload.php"
+        colors="true"
+        stopOnFailure="false"
+        cacheResult="false"
 >
-    <php>
-        <ini name="display_errors" value="1" />
-        <ini name="error_reporting" value="-1" />
-        <server name="APP_ENV" value="test" force="true" />
-        <server name="SHELL_VERBOSITY" value="-1" />
-        <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
-        <server name="SYMFONY_PHPUNIT_VERSION" value="10.0" />
-
-        <!-- ###+ symfony/framework-bundle ### -->
-        <env name="APP_ENV" value="dev"/>
-        <env name="APP_SECRET" value="ad358c558c65cf4a78ca454fca14f894"/>
-        <!-- ###- symfony/framework-bundle ### -->
-
-        <!-- ###+ doctrine/doctrine-bundle ### -->
-        <!-- Format described at https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#connecting-using-a-url -->
-        <!-- IMPORTANT: You MUST configure your server version, either here or in config/packages/doctrine.yaml -->
-        <!--  -->
-        <!-- DATABASE_URL="sqlite:///%kernel.project_dir%/var/data_%kernel.environment%.db" -->
-        <!-- DATABASE_URL="mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=8.0.32&charset=utf8mb4" -->
-        <!-- DATABASE_URL="mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=10.11.2-MariaDB&charset=utf8mb4" -->
-        <env name="DATABASE_URL" value="postgresql://app:!ChangeMe!@127.0.0.1:5432/app?serverVersion=16&amp;charset=utf8"/>
-        <!-- ###- doctrine/doctrine-bundle ### -->
-    </php>
-
     <testsuites>
-        <testsuite name="Project Test Suite">
-            <directory>tests</directory>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
         </testsuite>
     </testsuites>
 
-    <coverage>
-        <include>
-            <directory suffix=".php">src</directory>
-        </include>
-    </coverage>
-
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-    </listeners>
-
-    <!-- Run `composer require symfony/panther` before enabling this extension -->
-    <!--
-    <extensions>
-        <bootstrap class="Symfony\Bridge\PhpUnit\SymfonyExtension">
-            <parameter name="clock-mock-namespaces" value="App" />
-            <parameter name="dns-mock-namespaces" value="App" />
-        </bootstrap>
-        <extension class="Symfony\Component\Panther\ServerExtension" />
-    </extensions>
-    -->
+    <php>
+        <env name="APP_ENV" value="test"/>
+        <env name="KERNEL_CLASS" value="App\Kernel"/>
+        <env name="DATABASE_URL" value="sqlite:///%kernel.project_dir%/var/test.db"/>
+        <env name="MESSENGER_TRANSPORT_DSN" value="in-memory://"/>
+    </php>
 </phpunit>
