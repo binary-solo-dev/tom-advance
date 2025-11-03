@@ -15,6 +15,10 @@
         "symfony/yaml": "6.4.*"
     },
     "require-dev": {
+        "doctrine/doctrine-bundle": "*",
+        "phpunit/phpunit": "*",
+        "symfony/browser-kit": "6.4.*",
+        "symfony/css-selector": "6.4.*"
     },
     "config": {
         "allow-plugins": {
