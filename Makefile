@@ -1,6 +1,6 @@
 .PHONY: help build up down restart install composer-install test
 
-CLI=""
+CLI=
 # OS-specific overrides
 ifeq ($(OS),Windows_NT)
 	COMPOSE_FILE += -f docker-compose.windows.yaml
