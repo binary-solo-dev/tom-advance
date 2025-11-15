@@ -62,3 +62,8 @@ composer-install: ## Install PHP dependencies
 test: ## Run PHPUnit tests
 	@echo "🧪 Running tests..."
 	${DOCKER_COMPOSE} exec tms bin/phpunit
+
+# Testing commands
+test-coverage: ## Run PHPUnit tests
+	@echo "Running test coverage"
+	${DOCKER_COMPOSE} exec tms composer cov
