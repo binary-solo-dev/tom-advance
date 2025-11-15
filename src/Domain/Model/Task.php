@@ -13,6 +13,7 @@ final class Task
     private string $title;
     private ?string $description;
     private TaskStatus $status;
+
     private \DateTimeImmutable $createdAt;
     private \DateTimeImmutable $updatedAt;
 
@@ -53,5 +54,20 @@ final class Task
     public function getStatus(): TaskStatus
     {
         return $this->status;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function getCreatedAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): \DateTimeImmutable
+    {
+        return $this->updatedAt;
     }
 }

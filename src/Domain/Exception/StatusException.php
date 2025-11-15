@@ -5,7 +5,7 @@ namespace App\Domain\Exception;
 
 final class StatusException extends \Exception
 {
-    public static function becauseTaskAlreadyHasTheStatusDone   (): self
+    public static function becauseTaskAlreadyHasTheStatusDone(): self
     {
         return new self('Cannot change status of a done task.');
     }
