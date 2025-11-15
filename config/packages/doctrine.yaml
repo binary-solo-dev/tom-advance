@@ -12,8 +12,8 @@ doctrine:
           App:
             type: attribute
             is_bundle: false
-            dir: '%kernel.project_dir%/src/Entity'
-            prefix: 'App\Entity'
+            dir: '%kernel.project_dir%/src/Infrastructure/Persistence/Doctrine/Entity'
+            prefix: 'App\Infrastructure\Persistence\Doctrine\Entity'
             alias: App
       auto_generate_proxy_classes: true
       enable_lazy_ghost_objects: true
