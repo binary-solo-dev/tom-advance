@@ -56,7 +56,7 @@ final class TaskTest extends TestCase
         $task->changeStatus(TaskStatus::DONE());
 
         $this->expectException(StatusException::class);
-        $this->expectExceptionMessage('Cannot delete a completed task');
+        $this->expectExceptionMessage('Cannot delete a task that is done.');
 
         $task->assertCanBeDeleted();
     }

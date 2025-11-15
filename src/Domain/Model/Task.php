@@ -70,4 +70,11 @@ final class Task
     {
         return $this->updatedAt;
     }
+
+    public function assertCanBeDeleted(): void
+    {
+        if ($this->status->isDone()) {
+            throw StatusException::becauseTaskCannotBeDeletedWhenDone();
+        }
+    }
 }
