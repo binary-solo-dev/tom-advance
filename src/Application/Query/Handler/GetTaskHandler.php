@@ -15,6 +15,9 @@ final class GetTaskHandler
     ) {
     }
 
+    /**
+     * @throws TaskNotFoundException
+     */
     public function __invoke(GetTaskQuery $taskQuery): Task
     {
         $task = $this->taskRepository->findById($taskQuery->id);

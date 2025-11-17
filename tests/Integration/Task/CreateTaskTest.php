@@ -5,27 +5,23 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Task;
 
 use App\Application\Command\CreateTaskCommand;
-use App\Application\Command\Handler\CreateTaskHandler;
 use App\Domain\Exception\DuplicateTitleException;
-use App\Infrastructure\Bus\SyncCommandBus;
 use App\Infrastructure\Persistence\InMemory\InMemoryTaskRepository;
-use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 
-final class CreateTaskTest extends TestCase
+final class CreateTaskTest extends KernelTestCase
 {
-    private SyncCommandBus $commandBus;
     private InMemoryTaskRepository $taskRepository;
+    private MessageBusInterface $commandBus;
 
     protected function setUp(): void
     {
-        $this->taskRepository = new InMemoryTaskRepository();
-        $this->commandBus = new SyncCommandBus();
+        self::bootKernel();
 
-        $createTaskHandler = new CreateTaskHandler($this->taskRepository);
-        $this->commandBus->registerHandler(
-            CreateTaskCommand::class,
-            $createTaskHandler
-        );
+        $this->taskRepository = static::getContainer()->get(InMemoryTaskRepository::class);
+        $this->commandBus = static::getContainer()->get('messenger.bus.command');
     }
 
     public function test_it_creates_task(): void
@@ -53,7 +49,13 @@ final class CreateTaskTest extends TestCase
         $duplicateCommand = new CreateTaskCommand('Test Task');
 
         // Act & Assert
-        $this->expectException(DuplicateTitleException::class);
-        $this->commandBus->dispatch($duplicateCommand);
+        try {
+            $this->commandBus->dispatch($duplicateCommand);
+            $this->fail('Expected exception was not thrown');
+        } catch (HandlerFailedException $e) {
+            $previous = $e->getPrevious();
+            $this->assertInstanceOf(DuplicateTitleException::class, $previous);
+            $this->assertEquals('Task with title "Test Task" already exists', $previous->getMessage());
+        }
     }
 }

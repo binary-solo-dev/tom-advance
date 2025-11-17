@@ -2,12 +2,16 @@
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
-        bootstrap="vendor/autoload.php"
+        bootstrap="tests/bootstrap.php"
         colors="true"
         stopOnFailure="false"
         cacheResult="false"
 >
+    <!--        bootstrap="vendor/symfony/phpunit-bridge/bootstrap.php"-->
     <testsuites>
+        <testsuite name="Integration">
+            <directory>tests/Integration</directory>
+        </testsuite>
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
         </testsuite>
@@ -20,8 +24,8 @@
     </source>
 
     <php>
-        <env name="APP_ENV" value="test"/>
-        <env name="KERNEL_CLASS" value="App\Kernel"/>
+        <env name="APP_ENV" value="test" force="true "/>
+        <env name="KERNEL_CLASS" value="App\Kernel" />
         <env name="DATABASE_URL" value="sqlite:///%kernel.project_dir%/var/test.db"/>
         <env name="MESSENGER_TRANSPORT_DSN" value="in-memory://"/>
     </php>
