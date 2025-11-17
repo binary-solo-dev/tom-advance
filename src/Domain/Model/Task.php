@@ -27,6 +27,9 @@ final class Task
         $this->updatedAt = new \DateTimeImmutable();
     }
 
+    /**
+     * @throws StatusException
+     */
     public function changeStatus(TaskStatus $newStatus): void
     {
         if ($this->status->isDone()) {

@@ -12,4 +12,5 @@ interface TaskRepositoryInterface
     public function findAll(): array;
     public function findByTitle(string $title): ?Task;
     public function delete(Task $task): void;
+    public function existsByTitle(string $title): bool;
 }
