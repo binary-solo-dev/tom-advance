@@ -35,6 +35,15 @@ RUN set -eux; \
     apk add --no-cache --virtual .php-phpexts-rundeps $runDeps; \
     apk del .build-deps
 
+#RUN pecl install xdebug
+#RUN docker-php-ext-enable xdebug
+
+# Install and configure Xdebug
+RUN apk add --no-cache $PHPIZE_DEPS linux-headers \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

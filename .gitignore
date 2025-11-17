@@ -56,3 +56,5 @@ yarn-error.log
 project-version.txt
 
 docs/requirements
+
+.coverage
