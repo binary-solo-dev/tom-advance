@@ -5,16 +5,18 @@ namespace App\Tests\Functional\Controller;
 
 use App\Domain\ValueObject\TaskStatus;
 use App\Infrastructure\Persistence\InMemory\InMemoryTaskRepository;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 final class TaskControllerTest extends WebTestCase
 {
     private InMemoryTaskRepository $taskRepository;
+    private KernelBrowser $client;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->client = self::createClient();
         $this->taskRepository = static::getContainer()->get(InMemoryTaskRepository::class);
         $this->taskRepository->clear();
     }
@@ -22,9 +24,7 @@ final class TaskControllerTest extends WebTestCase
     // CREATE task tests
     public function test_it_creates_task(): void
     {
-        $client = self::createClient();
-
-        $client->request(
+        $this->client->request(
             'POST',
             '/tasks',
             [],
