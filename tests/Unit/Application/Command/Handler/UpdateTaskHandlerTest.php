@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Application\Command\Handler;
 
-use App\Application\Command\CreateTaskCommand;
-use App\Application\Command\Handler\CreateTaskHandler;
+use App\Application\Command\Handler\UpdateTaskHandler;
+use App\Application\Command\UpdateTaskCommand;
 use App\Domain\Exception\DuplicateTitleException;
+use App\Domain\Exception\TaskNotFoundException;
 use App\Domain\Model\Task;
 use App\Domain\Repository\TaskRepositoryInterface;
 use App\Domain\ValueObject\TaskStatus;
@@ -26,41 +27,91 @@ final class UpdateTaskHandlerTest extends TestCase
 
     public function test_it_updates_an_existing_task(): void
     {
-        // Arrange
-        $command = new UpdateTaskCommand('existing-task-id', 'Test Task', 'Description', TaskStatus::IN_PROGRESS());
+        // ARRANGE
+        $existingTask = new Task('Test Task', 'Description');
+        $existingTaskId = $existingTask->getId();
+
+        $command = new UpdateTaskCommand($existingTaskId, 'Test Task changed a bit', 'Description', TaskStatus::IN_PROGRESS());
+
+        $this->taskRepository
+            ->expects($this->once())
+            ->method('findById')
+            ->with($existingTaskId)
+            ->willReturn($existingTask);
 
         $this->taskRepository
             ->expects($this->once())
             ->method('existsByTitle')
-            ->with('Test Task')
+            ->with('Test Task changed a bit')
             ->willReturn(false);
 
         $this->taskRepository
             ->expects($this->once())
             ->method('save')
             ->with($this->callback(function (Task $task) {
-                return 'Test Task' === $task->getTitle()
+                return 'Test Task changed a bit' === $task->getTitle()
                     && 'Description' === $task->getDescription()
                     && TaskStatus::IN_PROGRESS() === $task->getStatus();
             }));
 
-        // Act
+        // ACT
         $this->updateTaskHandler->__invoke($command);
     }
 
     public function test_it_throws_exception_for_duplicate_title_for_existing_task(): void
     {
-        // Arrange
-        $command = new UpdateTaskCommand('existing-task-id', 'Duplicate Task', 'Description', TaskStatus::IN_PROGRESS());
+        // ARRANGE
+        $existingTask = new Task('Test Task', 'Description');
+        $existingTaskId = $existingTask->getId();
+
+        $command = new UpdateTaskCommand($existingTaskId, 'Test Task changed a bit', 'Description', TaskStatus::IN_PROGRESS());
+
+        $this->taskRepository
+            ->expects($this->once())
+            ->method('findById')
+            ->with($existingTaskId)
+            ->willReturn($existingTask);
 
         $this->taskRepository
             ->expects($this->once())
             ->method('existsByTitle')
-            ->with('Duplicate Task')
+            ->with('Test Task changed a bit')
             ->willReturn(true);
 
-        // Act & Assert
+        $this->taskRepository
+            ->expects($this->never())
+            ->method('save');
+
+        // ACT & ASSERT
         $this->expectException(DuplicateTitleException::class);
+        $this->expectExceptionMessage('Task with title "Test Task changed a bit" already exists');
+        $this->updateTaskHandler->__invoke($command);
+    }
+
+    public function test_it_throws_exception_when_a_task_is_not_found(): void
+    {
+        // ARRANGE
+        $nonExistingTaskId = 'non-existent-task-id';
+
+        $command = new UpdateTaskCommand($nonExistingTaskId, 'Test Task changed a bit', 'Description', TaskStatus::IN_PROGRESS());
+
+        $this->taskRepository
+            ->expects($this->once())
+            ->method('findById')
+            ->with($nonExistingTaskId)
+            ->willReturn(null);
+
+        $this->taskRepository
+            ->expects($this->never())
+            ->method('existsByTitle');
+
+        $this->taskRepository
+            ->expects($this->never())
+            ->method('save');
+
+        // ACT & ASSERT
+        $this->expectException(TaskNotFoundException::class);
+        $this->expectExceptionMessage('Cannot find the task with id: non-existent-task-id.');
         $this->updateTaskHandler->__invoke($command);
     }
 }
