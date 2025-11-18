@@ -9,4 +9,8 @@ final class TaskNotFoundException extends \Exception
     {
         return new self(sprintf('Cannot find the task with id: %s.', $taskId));
     }
+    public static function becauseToBeDeletedTaskWithIdDoesNotExist(string $taskId): self
+    {
+        return new self(sprintf('Cannot find the to be deleted task with id: %s.', $taskId));
+    }
 }
