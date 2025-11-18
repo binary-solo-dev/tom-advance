@@ -1,0 +1,14 @@
+framework:
+  messenger:
+    default_bus: messenger.bus.command
+    buses:
+      messenger.bus.query: ~
+      messenger.bus.command: ~
+      messenger.bus.event: ~
+
+    transports:
+      sync: 'sync://'
+
+    routing:
+      'App\Application\Command\CreateTaskCommand': sync
+      'App\Application\Query\GetTaskQuery': sync

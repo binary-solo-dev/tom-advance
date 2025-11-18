@@ -2,9 +2,9 @@ doctrine:
   dbal:
     driver: 'pdo_sqlite'
     url: '%env(resolve:DATABASE_URL)%'
-    memory: false
+#    memory: false
 
   orm:
-    auto_generate_proxy_classes: true
+    #    auto_generate_proxy_classes: true
     naming_strategy: doctrine.orm.naming_strategy.underscore
     auto_mapping: true

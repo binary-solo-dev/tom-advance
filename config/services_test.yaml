@@ -1,0 +1,22 @@
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  # Override the interface binding for test environment
+  App\Infrastructure\Persistence\InMemory\InMemoryTaskRepository:
+    public: true
+
+  App\Domain\Repository\TaskRepositoryInterface:
+    alias: App\Infrastructure\Persistence\InMemory\InMemoryTaskRepository
+
+  App\Application\Command\Handler\:
+    resource: '../src/Application/Command/Handler'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.command' }
+
+  App\Application\Query\Handler\:
+    resource: '../src/Application/Query/Handler'
+    tags:
+      - { name: 'messenger.message_handler', bus: 'messenger.bus.query' }

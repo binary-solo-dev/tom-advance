@@ -20,5 +20,20 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Infrastructure\Persistence\InMemory\InMemoryTaskRepository:
+        public: true
+
+    App\Domain\Repository\TaskRepositoryInterface:
+        alias: App\Infrastructure\Persistence\Doctrine\Repository\TaskRepository
+
+#    App\Application\Command\Handler\CreateTaskHandler:
+#        arguments:
+#            $taskRepository: '@App\Domain\Repository\TaskRepositoryInterface'
+#        tags:
+#            - { name: messenger.message_handler, bus: messenger.bus.command }
+#
+#    App\Application\Query\Handler\GetTaskHandler:
+#        arguments:
+#            $taskRepository: '@App\Domain\Repository\TaskRepositoryInterface'
+#        tags:
+#            - { name: messenger.message_handler, bus: messenger.bus.query }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Exception;
 
-class DuplicateTitleException extends \RuntimeException
+final class DuplicateTitleException extends \RuntimeException
 {
     public static function becauseTaskWithTitleAlreadyExists(string $title): self
     {
