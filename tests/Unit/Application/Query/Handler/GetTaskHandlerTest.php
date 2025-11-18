@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Application\Command\Handler;
+namespace App\Tests\Unit\Application\Query\Handler;
 
 use App\Application\Query\GetTaskQuery;
 use App\Application\Query\Handler\GetTaskHandler;
