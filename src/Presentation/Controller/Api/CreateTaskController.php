@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Presentation\Controller\Api;
 
+use App\Application\Command\CreateTaskCommand;
+use App\Presentation\Request\CreateTaskRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -12,13 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 final class CreateTaskController extends AbstractController
 {
     public function __construct(
-        private MessageBusInterface $commandBus
+        private readonly MessageBusInterface $commandBus
     ) {
     }
 
-    public function __invoke(
-        CreateTaskRequest $createTaskRequest
-    ): JsonResponse {
+    public function __invoke(CreateTaskRequest $createTaskRequest): JsonResponse
+    {
         $command = new CreateTaskCommand(
             $createTaskRequest->title,
             $createTaskRequest->description
