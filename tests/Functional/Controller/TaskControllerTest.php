@@ -21,7 +21,6 @@ final class TaskControllerTest extends WebTestCase
         $this->taskRepository->clear();
     }
 
-    // CREATE task tests
     public function test_it_creates_task(): void
     {
         $this->client->request(
