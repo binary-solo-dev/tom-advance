@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-final class TaskControllerTest extends WebTestCase
+final class CreateTaskControllerTest extends WebTestCase
 {
     private InMemoryTaskRepository $taskRepository;
     private KernelBrowser $client;
