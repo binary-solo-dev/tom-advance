@@ -14,10 +14,6 @@ final class InMemoryTaskRepository implements TaskRepositoryInterface
 
     public function save(Task $task): void
     {
-        if ($this->existsByTitle($task->getTitle())) {
-            throw DuplicateTitleException::becauseTaskWithTitleAlreadyExists($task->getTitle());
-        }
-
         $this->tasks[$task->getId()] = $task;
     }
 
