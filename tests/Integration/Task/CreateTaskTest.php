@@ -26,13 +26,13 @@ final class CreateTaskTest extends KernelTestCase
 
     public function test_it_creates_task(): void
     {
-        // Arrange
+        // ARRANGE
         $command = new CreateTaskCommand('Test Task', 'Test Description');
 
-        // Act
+        // ACT
         $this->commandBus->dispatch($command);
 
-        // Assert
+        // ASSERT
         $task = $this->taskRepository->findByTitle('Test Task');
 
         $this->assertNotNull($task);
@@ -42,13 +42,13 @@ final class CreateTaskTest extends KernelTestCase
 
     public function test_it_cannot_create_task_with_duplicate_title(): void
     {
-        // Arrange
+        // ARRANGE
         $command = new CreateTaskCommand('Test Task');
         $this->commandBus->dispatch($command);
 
         $duplicateCommand = new CreateTaskCommand('Test Task');
 
-        // Act & Assert
+        // ACT & ASSERT
         try {
             $this->commandBus->dispatch($duplicateCommand);
             $this->fail('Expected exception was not thrown');

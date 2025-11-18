@@ -4,9 +4,12 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Task;
 
 use App\Application\Query\GetTaskQuery;
+use App\Domain\Exception\DuplicateTitleException;
+use App\Domain\Exception\TaskNotFoundException;
 use App\Domain\Model\Task;
 use App\Infrastructure\Persistence\InMemory\InMemoryTaskRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
@@ -43,4 +46,19 @@ final class GetTaskTest extends KernelTestCase
         $this->assertEquals('Test description', $result->getDescription());
     }
 
+    public function test_it_a_not_found_exception_is_thrown_when_a_task_does_not_exist(): void
+    {
+        // ARRANGE
+        $query = new GetTaskQuery('non-existent-task-id');
+
+        // ACT & ASSERT
+        try {
+            $this->queryBus->dispatch($query);
+            $this->fail('Expected exception was not thrown');
+        } catch (HandlerFailedException $e) {
+            $previous = $e->getPrevious();
+            $this->assertInstanceOf(TaskNotFoundException::class, $previous);
+            $this->assertEquals('Cannot find the task with id: non-existent-task-id.', $previous->getMessage());
+        }
+    }
 }
