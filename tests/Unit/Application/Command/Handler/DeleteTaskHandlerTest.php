@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Application\Command\Handler;
 
+use App\Application\Command\DeleteTaskCommand;
+use App\Application\Command\Handler\DeleteTaskHandler;
 use App\Domain\Exception\TaskNotFoundException;
 use App\Domain\Model\Task;
 use App\Domain\Repository\TaskRepositoryInterface;
@@ -64,6 +66,6 @@ final class DeleteTaskHandlerTest extends TestCase
         // ACT & ASSERT
         $this->expectException(TaskNotFoundException::class);
         $this->expectExceptionMessage('Cannot find the to be deleted task with id: non-existent-task-id.');
-        $this->updateTaskHandler->__invoke($command);
+        $this->deleteTaskHandler->__invoke($command);
     }
 }
