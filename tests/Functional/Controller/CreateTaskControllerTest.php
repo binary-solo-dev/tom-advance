@@ -42,4 +42,55 @@ final class CreateTaskControllerTest extends WebTestCase
         $this->assertEquals('Test Description', $task->getDescription());
         $this->assertEquals(TaskStatus::TODO, $task->getStatus());
     }
+
+    public function test_it_validates_empty_title_on_create(): void
+    {
+        $this->client->request(
+            'POST',
+            '/tasks',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'title' => '',
+                'description' => 'Test Description'
+            ])
+        );
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+    }
+
+    public function test_it_prevents_creating_task_with_duplicate_title(): void
+    {
+        $this->client->disableReboot();
+        $this->client->request(
+            'POST',
+            '/tasks',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'title' => 'Duplicate Title',
+                'description' => 'First Description'
+            ])
+        );
+        $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
+
+        $task = $this->taskRepository->findByTitle('Duplicate Title');
+        $this->assertNotNull($task);
+
+        $this->client->request(
+            'POST',
+            '/tasks',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'title' => 'Duplicate Title',
+                'description' => 'Second Description'
+            ])
+        );
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_CONFLICT);
+    }
 }

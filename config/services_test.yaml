@@ -7,6 +7,7 @@ services:
   # Override the interface binding for test environment
   App\Infrastructure\Persistence\InMemory\InMemoryTaskRepository:
     public: true
+    shared: true
 
   App\Domain\Repository\TaskRepositoryInterface:
     alias: App\Infrastructure\Persistence\InMemory\InMemoryTaskRepository
@@ -20,3 +21,10 @@ services:
     resource: '../src/Application/Query/Handler'
     tags:
       - { name: 'messenger.message_handler', bus: 'messenger.bus.query' }
+
+  App\Presentation\Controller\Api\CreateTaskController:
+    autowire: true
+
+  App\Presentation\Exception\Api\ExceptionToHttpSubscriber:
+    tags:
+      - { name: kernel.event_subscriber }

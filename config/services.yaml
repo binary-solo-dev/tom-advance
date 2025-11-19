@@ -26,6 +26,13 @@ services:
     App\Domain\Repository\TaskRepositoryInterface:
         alias: App\Infrastructure\Persistence\Doctrine\Repository\TaskRepository
 
+    App\Presentation\Exception\Api\ExceptionToHttpSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    App\Presentation\Controller\Api\CreateTaskController:
+        autowire: true
+
 #    App\Application\Command\Handler\CreateTaskHandler:
 #        arguments:
 #            $taskRepository: '@App\Domain\Repository\TaskRepositoryInterface'

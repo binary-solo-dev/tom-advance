@@ -16,6 +16,9 @@ final class CreateTaskHandler
     ) {
     }
 
+    /**
+     * @throws DuplicateTitleException
+     */
     public function __invoke(CreateTaskCommand $command): void
     {
         $task = new Task($command->title, $command->description);
